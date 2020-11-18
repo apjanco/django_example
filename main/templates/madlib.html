@@ -2,8 +2,8 @@
 {% block content %}
 <div class="container">
     <div class="row card">
-<div id='form'></div>
-<p id='theText'>A vacation is when you take a trip to some <span id="1" class="adjective"></span> place
+<div style="margin-top:50px;" id='form'></div>
+<h4 style="margin-top:20px; padding:10px;" id='theText'>A vacation is when you take a trip to some <span id="1" class="adjective"></span> place
     with your <span id="2" class="adjective"></span> family. Usually you go to some place
     that is near a/an <span id="3" class="noun"></span> or up on a/an <span id="4" class="noun"></span>.
     A good vacation place is one where you can ride <span id="5" class="plural_noun"></span>
@@ -18,7 +18,8 @@
     need vacations more than kids because parents are always very
     <span id="17" class="adjective"></span> and because they have to work <span id="18" class="number"></span>
     hours every day all year making enough <span id="19" class="plural_noun"></span> to pay
-    for the vacation.</p>
+    for the vacation.</h4>
+    <button class="btn btn-dark" onclick="save_madlib();">Save</button>
 </div></div>
     <script>
         function show_result(){
@@ -45,9 +46,9 @@
             let form = document.getElementById('form');
             let i;
             for (i = 0; i < spans.length; i++) {
-                form.innerHTML += '<input type="text" id="'+spans[i].id+'" placeholder="'+spans[i].className+'"><br>';
+                form.innerHTML += '<input class="form-control" class="input-group mb-3" type="text" id="'+spans[i].id+'" placeholder="'+spans[i].className+'">';
             }
-            form.innerHTML += '<button onclick="show_result();">'+ 'submit' +'</button>';
+            form.innerHTML += '<button class="btn btn-primary" onclick="show_result();">'+ 'submit' +'</button>';
 
             // on submit, add the form values to the text and display, hide the form 
         });
