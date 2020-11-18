@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row card">
+<div id='form'></div>
+<p id='theText'>A vacation is when you take a trip to some <span id="1" class="adjective"></span> place
+    with your <span id="2" class="adjective"></span> family. Usually you go to some place
+    that is near a/an <span id="3" class="noun"></span> or up on a/an <span id="4" class="noun"></span>.
+    A good vacation place is one where you can ride <span id="5" class="plural_noun"></span>
+    or play <span id="6" class="game"></span> or go hunting for <span id="7" class="plural_noun"></span>. I like
+    to spend my time <span id="8" class="ing_verb"></span> or <span id="9" class="ing_verb"></span>.
+    When parents go on a vacation, they spend their time eating
+    three <span id="10" class="plural_noun"></span> a day, and fathers play golf, and mothers
+    sit around <span id="11" class="ing_verb"></span>. Last summer, my little brother
+    fell in a/an <span id="12" class="noun"></span> and got poison <span id="13" class="plant"></span> all
+    over his<span id="14" class="body_part"></span>. My family is going to go to (the)
+    <span id="15" class="place"></span>, and I will practice <span id="16" class="ing_verb"></span>. Parents
+    need vacations more than kids because parents are always very
+    <span id="17" class="adjective"></span> and because they have to work <span id="18" class="number"></span>
+    hours every day all year making enough <span id="19" class="plural_noun"></span> to pay
+    for the vacation.</p>
+</div></div>
+    <script>
+        function show_result(){
+            let inputs = document.getElementsByTagName("input");
+            let spans = $('span[id]');
+            
+            
+            let i;
+            for (i = 0; i < inputs.length; i++) {
+                console.log(inputs[i].value)
+                spans[i].innerText = inputs[i].value
+                
+            }
+            let theText = document.getElementById('theText').style.visibility = "visible";
+
+
+        };
+
+        document.addEventListener("DOMContentLoaded", function(){
+            // hide the full text
+            let theText = document.getElementById('theText').style.visibility = "hidden";
+            // turn the fields into form elements for the user to complete
+            let spans = $('span[id]');
+            let form = document.getElementById('form');
+            let i;
+            for (i = 0; i < spans.length; i++) {
+                form.innerHTML += '<input type="text" id="'+spans[i].id+'" placeholder="'+spans[i].className+'"><br>';
+            }
+            form.innerHTML += '<button onclick="show_result();">'+ 'submit' +'</button>';
+
+            // on submit, add the form values to the text and display, hide the form 
+        });
+    </script>
+{% endblock %}

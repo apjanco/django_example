@@ -11,6 +11,6 @@ def home(request):
 
     return render(request, 'index.html', context)
 
-def item(request, item):
+def madlib(request):
     context = {}
-    return render(request, 'index.html', context)
+    return render(request, 'madlib.html', context)

@@ -19,6 +19,6 @@ from main import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('<int:item>/', views.item, name='item'),
+    path('madlib/', views.madlib, name='madlib'),
     path('', views.home, name='home'),
 ]
