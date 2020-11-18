@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.http import JsonResponse
+
 import names 
 import requests
 # Create your views here.
@@ -14,3 +16,13 @@ def home(request):
 def madlib(request):
     context = {}
     return render(request, 'madlib.html', context)
+
+def madlib_data(request):
+    if request.POST:
+        data = request.POST.get('data', None)
+        print(data)
+        return JsonResponse(data, safe=False)
+    else:
+        return JsonResponse({'message':'error'}, safe=False)
+
+    

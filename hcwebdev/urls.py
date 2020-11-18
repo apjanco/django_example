@@ -20,5 +20,6 @@ from main import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('madlib/', views.madlib, name='madlib'),
+    path('madlib-data/', views.madlib_data, name='madlib_data'),
     path('', views.home, name='home'),
 ]

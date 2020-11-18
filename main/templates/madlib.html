@@ -52,5 +52,26 @@
 
             // on submit, add the form values to the text and display, hide the form 
         });
+
+        function save_madlib(){
+            let spans = $('span[id]');
+            let i;
+            let data = {};
+            for (i = 0; i < spans.length; i++) {
+                let id = spans[i].id;
+                let class_ = spans[i].className;
+                let text = spans[i].innerHTML;
+                data[id] = {"class":class_,"text":text};
+            }
+            data = JSON.stringify(data);
+            $.post({
+            url: "{% url 'madlib_data' %}",
+            data: {'data':data, 'csrfmiddlewaretoken': '{{ csrf_token }}',},
+            }).done(function() {
+            alert('saved your madlib')
+            });
+            // note that this only shows that the POST was made, not successful
+        };
+            
     </script>
 {% endblock %}
