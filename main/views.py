@@ -4,6 +4,7 @@ import json
 from main.models import MadLib, Span
 from datetime import datetime
 from django.utils.timezone import make_aware
+from django.db.models import Count
 
 
 
@@ -34,8 +35,16 @@ def madlib_data(request):
             else:
                 madlib.spans.create(span_id=span,pos=data[span]['class'],text=data[span]['text'])
         madlib.save()
-        return JsonResponse(data, safe=False)
+        return madlib_stats()
     else:
         return JsonResponse({'message':'error'}, safe=False)
 
-    
+def madlib_stats():
+    #total number of spans 
+    data = {}
+    data['total_count'] = len(Span.objects.all())
+    for pos in list(Span.objects.values('pos').order_by('pos').annotate(count=Count('pos'))):
+        data[pos['pos']] = pos['count']
+    return JsonResponse(data, safe=False)
+
+

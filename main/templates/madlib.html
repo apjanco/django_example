@@ -20,6 +20,7 @@
     hours every day all year making enough <span id="19" class="plural_noun"></span> to pay
     for the vacation.</h4>
     <button class="btn btn-dark" onclick="save_madlib();">Save</button>
+    <div id="counts"></div>
 </div></div>
     <script>
         function show_result(){
@@ -68,9 +69,14 @@
             $.post({
             url: "{% url 'madlib_data' %}",
             data: {'data':data, 'csrfmiddlewaretoken': '{{ csrf_token }}',},
-            }).done(function() {
-            alert('saved your madlib')
-            });
+            success: function(response) {
+                counts = '';
+                for (i in response) {
+                  counts += i + ' ' + response[i] + '<br>';
+                };
+                $('#counts').append(counts);
+            }});
+            
             // note that this only shows that the POST was made, not successful
         };
             
