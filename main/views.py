@@ -26,7 +26,7 @@ def madlib(request):
 
 def madlib_data(request):
     if request.POST:
-        data = request.POST.get('data', None)
+        data = request.POST.get('spans', None)
         data = json.loads(data)
         madlib, created = MadLib.objects.get_or_create(created=make_aware(datetime.now()), text=data['full_text'])
         for span in data.keys():

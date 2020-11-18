@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-    <div class="row card">
+    <div class="row">
 <div style="margin-top:50px;" id='form'></div>
-<h4 style="margin-top:20px; padding:10px;" id='theText'>A vacation is when you take a trip to some <span id="1" class="adjective"></span> place
+<div id='theText'><h4 style="margin-top:20px; padding:10px;">A vacation is when you take a trip to some <span id="1" class="adjective"></span> place
     with your <span id="2" class="adjective"></span> family. Usually you go to some place
     that is near a/an <span id="3" class="noun"></span> or up on a/an <span id="4" class="noun"></span>.
     A good vacation place is one where you can ride <span id="5" class="plural_noun"></span>
@@ -19,7 +19,7 @@
     <span id="17" class="adjective"></span> and because they have to work <span id="18" class="number"></span>
     hours every day all year making enough <span id="19" class="plural_noun"></span> to pay
     for the vacation.</h4>
-    <button class="btn btn-dark" onclick="save_madlib();">Save</button>
+    <button class="btn btn-dark" onclick="save_madlib();">Save</button></div>
     <div id="counts"></div>
 </div></div>
     <script>
@@ -68,7 +68,7 @@
             data = JSON.stringify(data);
             $.post({
             url: "{% url 'madlib_data' %}",
-            data: {'data':data, 'csrfmiddlewaretoken': '{{ csrf_token }}',},
+            data: {'spans':data, 'csrfmiddlewaretoken': '{{ csrf_token }}',},
             success: function(response) {
                 counts = '';
                 for (i in response) {
