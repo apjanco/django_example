@@ -1,5 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+import json
+from main.models import MadLib, Span
+from datetime import datetime
+from django.utils.timezone import make_aware
+
+
 
 import names 
 import requests
@@ -20,7 +26,14 @@ def madlib(request):
 def madlib_data(request):
     if request.POST:
         data = request.POST.get('data', None)
-        print(data)
+        data = json.loads(data)
+        madlib, created = MadLib.objects.get_or_create(created=make_aware(datetime.now()), text=data['full_text'])
+        for span in data.keys():
+            if span == 'full_text':
+                pass
+            else:
+                madlib.spans.create(span_id=span,pos=data[span]['class'],text=data[span]['text'])
+        madlib.save()
         return JsonResponse(data, safe=False)
     else:
         return JsonResponse({'message':'error'}, safe=False)

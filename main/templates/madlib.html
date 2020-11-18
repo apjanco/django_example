@@ -57,6 +57,7 @@
             let spans = $('span[id]');
             let i;
             let data = {};
+            data['full_text'] = $('#theText').text();
             for (i = 0; i < spans.length; i++) {
                 let id = spans[i].id;
                 let class_ = spans[i].className;
