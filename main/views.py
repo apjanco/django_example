@@ -1,15 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import json
 from main.models import MadLib, Span
 from datetime import datetime
 from django.utils.timezone import make_aware
 from django.db.models import Count
+import random
+from bs4 import BeautifulSoup  
 
-
+import spacy
+nlp = spacy.load('en_core_web_sm')
 
 import names 
 import requests
+
+
 # Create your views here.
 def home(request):
     context = {}
@@ -21,8 +26,57 @@ def home(request):
     return render(request, 'index.html', context)
 
 def madlib(request):
+    if request.session.get('text', False):
+        print(request.session.get('text', False))
     context = {}
     return render(request, 'madlib.html', context)
+
+def custom_madlib(request):
+    context = {}
+    if request.POST:
+        #get values from the template
+        text = request.POST.get('text', None)
+        swap_percent = request.POST.get('swap_percent', None)
+        print('swap', swap_percent)
+        soup = BeautifulSoup()
+        #identify swap words and generate madlib spans 
+        doc = nlp(text)
+        word_types = ['NOUN','PROPN','ADJ','VERB','ADV']
+        madlib_words = [token.i for token in doc if token.pos_ in word_types]
+        swap_percent = 1.0 #TODO add this feature
+        number_to_swap = swap_percent * len(madlib_words)
+        swap_words = random.choices(madlib_words, k=int(number_to_swap))
+        soup_string = '<h4 style="margin-top:20px; padding:10px;" id="theText">'
+        for i, token in enumerate(doc):
+            
+            #add span with id and class if in swap_words
+            if i in swap_words:
+                print('[s]',token.text)
+                new_span = soup.new_tag("span") 
+                new_span.attrs['id'] = i 
+                new_span.attrs['class'] = token.pos_
+                if i+1 < len(doc) and doc[i+1].pos_ == 'PUNCT':
+                    soup_string += token.text
+                else:
+                    soup_string += str(new_span) + ' '
+                
+
+            #add the text of regular words
+            else:
+                print('[ns]',token.text)
+                if i+1 < len(doc) and doc[i+1].pos_ == 'PUNCT':
+                    soup_string += token.text + ' '
+                else:
+                    soup_string += token.text + ' '
+        soup = BeautifulSoup(soup_string) 
+        theText = soup.find("h4")         
+    
+        context['theText'] = str(theText)
+        #auto-fill random choices
+        return render(request, 'madlib-result.html', context)
+
+    return render(request, 'custom-madlib-text.html', context)
+
 
 def madlib_data(request):
     if request.POST:
