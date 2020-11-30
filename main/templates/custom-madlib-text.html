@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+   
+</style>
+<div class="container">
+    <div class="row card">
+<div style="margin-top:50px;" id='form'></div>
+<h4>Enter your text here</h4>
+<form method="post">
+    {% csrf_token %}
+    <textarea style="width:100%;" name="text" rows="10"></textarea>
+    <div><p>Percent of text to swap:</p><input name="swap_percent" type="range" min="1" max="100" value="50" class="slider" id="swap_percent"><p id="percent"></p></div>
+
+    <input class="btn btn-primary" type="submit" value="Submit">
+</form>
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $('input[type=range]').on('change', function() {
+        $('#percent').text(this.value + '%');
+});
+</script>
+{% endblock %}

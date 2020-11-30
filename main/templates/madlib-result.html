@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row card">
+<div style="margin-top:50px;" id='form'></div>
+{{ theText|safe }}
+<button class="btn btn-dark" onclick="save_madlib();">Save</button>
+    <div id="counts"></div>
+</div></div>
+    <script>
+        function show_result(){
+            let inputs = document.getElementsByTagName("input");
+            let spans = $('span[id]');
+            
+            
+            let i;
+            for (i = 0; i < inputs.length; i++) {
+                console.log(inputs[i].value)
+                spans[i].innerText = inputs[i].value
+                
+            }
+            let theText = document.getElementById('theText').style.visibility = "visible";
+
+
+        };
+
+        document.addEventListener("DOMContentLoaded", function(){
+            // hide the full text
+            let theText = document.getElementById('theText').style.visibility = "hidden";
+            // turn the fields into form elements for the user to complete
+            let spans = $('span[id]');
+            let form = document.getElementById('form');
+            let i;
+            for (i = 0; i < spans.length; i++) {
+                form.innerHTML += '<input class="form-control" class="input-group mb-3" type="text" id="'+spans[i].id+'" placeholder="'+spans[i].className+'">';
+            }
+            form.innerHTML += '<button class="btn btn-primary" onclick="show_result();">'+ 'submit' +'</button>';
+
+            // on submit, add the form values to the text and display, hide the form 
+        });
+
+        function save_madlib(){
+            let spans = $('span[id]');
+            let i;
+            let data = {};
+            data['full_text'] = $('#theText').text();
+            for (i = 0; i < spans.length; i++) {
+                let id = spans[i].id;
+                let class_ = spans[i].className;
+                let text = spans[i].innerHTML;
+                data[id] = {"class":class_,"text":text};
+            }
+            data = JSON.stringify(data);
+            $.post({
+            url: "{% url 'madlib_data' %}",
+            data: {'data':data, 'csrfmiddlewaretoken': '{{ csrf_token }}',},
+            success: function(response) {
+                counts = '';
+                for (i in response) {
+                  counts += i + ' ' + response[i] + '<br>';
+                };
+                $('#counts').append(counts);
+            }});
+            
+            // note that this only shows that the POST was made, not successful
+        };
+            
+    </script>
+{% endblock %}
