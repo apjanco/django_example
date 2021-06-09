@@ -11,16 +11,11 @@ from bs4 import BeautifulSoup
 import spacy
 nlp = spacy.load('en_core_web_sm')
 
-import names 
 import requests
-
 
 # Create your views here.
 def home(request):
     context = {}
-
-    context['name'] = names.get_full_name()
-    context['words'] = ', '.join([a['word'] for a in requests.get('http://api.wordnik.com:80/v4/words.json/randomWords?hasDictionaryDef=true&minCorpusCount=0&minLength=5&maxLength=15&limit=10&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5').json()])
     context['quotes'] = requests.get('https://thesimpsonsquoteapi.glitch.me/quotes?count=10').json()
 
     return render(request, 'index.html', context)
@@ -37,14 +32,16 @@ def custom_madlib(request):
         #get values from the template
         text = request.POST.get('text', None)
         swap_percent = request.POST.get('swap_percent', None)
+        if swap_percent:
+            swap_percent = int(swap_percent) / 100
         print('swap', swap_percent)
         soup = BeautifulSoup()
         #identify swap words and generate madlib spans 
         doc = nlp(text)
         word_types = ['NOUN','PROPN','ADJ','VERB','ADV']
         madlib_words = [token.i for token in doc if token.pos_ in word_types]
-        swap_percent = 1.0 #TODO add this feature
-        number_to_swap = swap_percent * len(madlib_words)
+
+        number_to_swap = int(swap_percent * len(madlib_words))
         swap_words = random.choices(madlib_words, k=int(number_to_swap))
         soup_string = '<h4 style="margin-top:20px; padding:10px;" id="theText">'
         for i, token in enumerate(doc):
